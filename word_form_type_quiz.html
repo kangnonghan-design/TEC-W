@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Form Challenge</title>
+<style>
+:root{--bg:#fffaf4;--card:#fff;--text:#2e2e2e;--muted:#737373;--line:#e9e1d6;--accent:#4f6df5;--ok:#228b57;--bad:#cf4b4b}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:linear-gradient(180deg,#fffdf9,#fff6e9);color:var(--text)}
+.wrap{max-width:900px;margin:auto;padding:22px}
+.hero,.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.hero{padding:24px;margin-bottom:18px}
+.hero h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.6rem)}
+.hero p{margin:0;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{padding:7px 11px;border-radius:999px;font-weight:700;font-size:.92rem}
+.noun{background:#ffe7a3}.verb{background:#bfe6ff}.adj{background:#ffd2dd}.adv{background:#cdf0d2}.ving{background:#ddd2ff}
+.panel{padding:22px;margin-bottom:18px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.rule{border:1px solid var(--line);border-radius:15px;padding:12px;background:#fff}
+.rule b{display:block;margin-bottom:4px}
+.quizhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.progress{font-weight:700;color:var(--muted)} .score{font-weight:800}
+.wordbox{text-align:center;padding:28px 10px 18px}
+.word{font-size:clamp(2rem,8vw,4.4rem);font-weight:900;letter-spacing:.5px}
+.hint{color:var(--muted);margin-top:8px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice{border:2px solid transparent;border-radius:14px;padding:14px;font-weight:800;font-size:1rem;cursor:pointer;background:#f5f5f5;transition:.15s ease}
+.choice:hover{transform:translateY(-1px);border-color:#cdd6ff}
+.choice.correct{background:#e5f7ec;border-color:var(--ok)} .choice.wrong{background:#fdeaea;border-color:var(--bad)}
+.feedback{display:none;margin-top:16px;padding:14px;border-radius:14px;background:#f7f7ff;line-height:1.55}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+button.ctrl{border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}
+.primary{background:var(--accent);color:#fff}.secondary{background:#ececec}
+.modebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.mode{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;cursor:pointer}
+.mode.active{background:#edf0ff;border-color:#9cabff;font-weight:800}
+.example{margin-top:10px;padding:10px 12px;background:#fffdf4;border-radius:10px;border:1px solid #f1e5bb}
+.footer{color:var(--muted);text-align:center;padding:8px 0 20px}
+@media(max-width:560px){.choices{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Word Form Challenge</h1>
+    <p>ฝึกแยกชนิดคำสำหรับ Reading: Noun, Verb, Adjective, Adverb และ V-ing</p>
+    <div class="legend">
+      <span class="tag noun">Noun</span><span class="tag verb">Verb</span><span class="tag adj">Adjective</span><span class="tag adv">Adverb</span><span class="tag ving">V-ing</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>ทริกดูรูปคำ</h2>
+    <div class="rules">
+      <div class="rule"><b>Noun</b>-tion, -sion, -ment, -ness, -ity, -er, -or</div>
+      <div class="rule"><b>Verb</b>-ize/-ise, -ify, -en หรือรูปกริยาพื้นฐาน</div>
+      <div class="rule"><b>Adjective</b>-ful, -less, -ous, -able, -ive, -al</div>
+      <div class="rule"><b>Adverb</b>มักลงท้าย -ly เช่น clearly, carefully</div>
+      <div class="rule"><b>V-ing</b>กริยา + ing เช่น working, improving, learning</div>
+    </div>
+    <div class="modebar">
+      <button class="mode active" data-mode="word">ดูคำอย่างเดียว</button>
+      <button class="mode" data-mode="sentence">ดูในประโยค</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="quizhead">
+      <div class="progress" id="progress"></div>
+      <div class="score" id="score"></div>
+    </div>
+    <div class="wordbox">
+      <div class="word" id="word"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+    <div class="choices" id="choices">
+      <button class="choice" data-type="Noun">Noun</button>
+      <button class="choice" data-type="Verb">Verb</button>
+      <button class="choice" data-type="Adjective">Adjective</button>
+      <button class="choice" data-type="Adverb">Adverb</button>
+      <button class="choice" data-type="V-ing">V-ing</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="actions">
+      <button class="ctrl primary" id="next">Next</button>
+      <button class="ctrl secondary" id="restart">Restart</button>
+      <button class="ctrl secondary" id="shuffle">Shuffle</button>
+    </div>
+  </section>
+  <div class="footer">ทำให้ครบ 20 ข้อ แล้วลองสลับโหมด “ดูในประโยค” เพื่อฝึกแบบใกล้ข้อสอบ Reading มากขึ้น</div>
+</div>
+
+<script>
+const bank=[
+{w:"information",t:"Noun",why:"ลงท้าย -tion → มักเป็น Noun",s:"The manager gave us useful ______ about the project."},
+{w:"communication",t:"Noun",why:"ลงท้าย -tion → Noun",s:"Good ______ is important in the workplace."},
+{w:"management",t:"Noun",why:"ลงท้าย -ment → Noun",s:"Time ______ helps employees work efficiently."},
+{w:"happiness",t:"Noun",why:"ลงท้าย -ness → Noun",s:"Her ______ was easy to see."},
+{w:"responsibility",t:"Noun",why:"ลงท้าย -ity → Noun",s:"This task is my ______."},
+{w:"inform",t:"Verb",why:"เป็นกริยาพื้นฐาน แปลว่า แจ้ง/บอก",s:"Please ______ me if the schedule changes."},
+{w:"improve",t:"Verb",why:"เป็นกริยาพื้นฐาน แปลว่า พัฒนา/ดีขึ้น",s:"We need to ______ our service."},
+{w:"clarify",t:"Verb",why:"ลงท้าย -ify → มักเป็น Verb",s:"Could you ______ the instructions?"},
+{w:"organize",t:"Verb",why:"ลงท้าย -ize → มักเป็น Verb",s:"She will ______ the meeting."},
+{w:"strengthen",t:"Verb",why:"ลงท้าย -en → มักเป็น Verb",s:"Training can ______ your skills."},
+{w:"successful",t:"Adjective",why:"ลงท้าย -ful → Adjective",s:"The project was very ______."},
+{w:"careful",t:"Adjective",why:"ลงท้าย -ful → Adjective",s:"Please be ______ with this equipment."},
+{w:"informative",t:"Adjective",why:"ลงท้าย -ive → Adjective",s:"The presentation was very ______."},
+{w:"professional",t:"Adjective",why:"ลงท้าย -al → Adjective",s:"She gave a very ______ response."},
+{w:"comfortable",t:"Adjective",why:"ลงท้าย -able → Adjective",s:"This chair is very ______."},
+{w:"carefully",t:"Adverb",why:"ลงท้าย -ly → มักเป็น Adverb",s:"She completed the task ______."},
+{w:"clearly",t:"Adverb",why:"ลงท้าย -ly → Adverb",s:"The teacher explained the lesson ______."},
+{w:"successfully",t:"Adverb",why:"ลงท้าย -ly → Adverb",s:"The team finished the project ______."},
+{w:"quickly",t:"Adverb",why:"ลงท้าย -ly → Adverb",s:"Please respond ______."},
+{w:"politely",t:"Adverb",why:"ลงท้าย -ly → Adverb",s:"He spoke to the customer ______."},
+{w:"working",t:"V-ing",why:"work + ing → V-ing",s:"She is ______ on a report."},
+{w:"learning",t:"V-ing",why:"learn + ing → V-ing",s:"The students are ______ English."},
+{w:"improving",t:"V-ing",why:"improve + ing → V-ing",s:"The company is ______ its service."},
+{w:"planning",t:"V-ing",why:"plan + ing → V-ing",s:"They are ______ a new project."},
+{w:"writing",t:"V-ing",why:"write + ing → V-ing",s:"He is ______ an email."},
+{w:"friendly",t:"Adjective",why:"แม้ลงท้าย -ly แต่ friendly เป็น Adjective",s:"Our new colleague is very ______."},
+{w:"lovely",t:"Adjective",why:"แม้ลงท้าย -ly แต่ lovely เป็น Adjective",s:"It was a ______ evening."},
+{w:"daily",t:"Adjective",why:"daily มักเป็น Adjective เมื่อขยายคำนาม",s:"This is my ______ routine."}
+];
+
+let pool=[],index=0,score=0,locked=false,mode="word";
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function resetPool(){pool=shuffleArray([...bank]).slice(0,20);index=0;score=0;locked=false;render();}
+function render(){
+ const item=pool[index];
+ document.getElementById("progress").textContent=`ข้อ ${index+1} / ${pool.length}`;
+ document.getElementById("score").textContent=`คะแนน ${score}`;
+ document.getElementById("word").textContent=item.w;
+ document.getElementById("hint").textContent=mode==="word"?"คำนี้เป็นคำประเภทไหน?":item.s;
+ const fb=document.getElementById("feedback");fb.style.display="none";fb.innerHTML="";locked=false;
+ document.querySelectorAll(".choice").forEach(b=>{b.classList.remove("correct","wrong");b.disabled=false;});
+}
+function choose(btn){
+ if(locked)return;locked=true;const item=pool[index];const picked=btn.dataset.type;
+ document.querySelectorAll(".choice").forEach(b=>{if(b.dataset.type===item.t)b.classList.add("correct");if(b===btn&&picked!==item.t)b.classList.add("wrong");b.disabled=true;});
+ if(picked===item.t)score++;
+ document.getElementById("score").textContent=`คะแนน ${score}`;
+ const fb=document.getElementById("feedback");fb.style.display="block";
+ fb.innerHTML=`<b>${picked===item.t?"ถูกต้อง ✅":"ยังไม่ถูก ❌"}</b><br><b>${item.w}</b> = ${item.t}<br>${item.why}<div class="example"><b>Example:</b> ${item.s.replace("______","<u>"+item.w+"</u>")}</div>`;
+}
+document.querySelectorAll(".choice").forEach(b=>b.addEventListener("click",()=>choose(b)));
+document.getElementById("next").onclick=()=>{
+ if(!locked)return;
+ if(index<pool.length-1){index++;render();}
+ else{
+  document.getElementById("word").textContent="Finished!";
+  document.getElementById("hint").textContent=`คะแนนรวม ${score} / ${pool.length}`;
+  const fb=document.getElementById("feedback");fb.style.display="block";
+  fb.innerHTML=score>=16?"ดีมาก 🎉 ลองสลับเป็นโหมดประโยคเพื่อเพิ่มความยาก":"ลอง Restart อีกครั้ง แล้วสังเกต suffix และตำแหน่งคำในประโยค";
+ }
+};
+document.getElementById("restart").onclick=resetPool;
+document.getElementById("shuffle").onclick=resetPool;
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".mode").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");mode=b.dataset.mode;render();
+});
+resetPool();
+</script>
+</body>
+</html>
