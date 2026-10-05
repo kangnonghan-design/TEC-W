@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Form Master 100</title>
+<style>
+:root{--bg:#fff9f1;--card:#fff;--ink:#272727;--muted:#6e6e6e;--line:#eadfce;--accent:#4f6df5;--ok:#1f8d57;--bad:#ca4a4a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:linear-gradient(#fffdf9,#fff3e4);color:var(--ink)}
+.wrap{max-width:980px;margin:auto;padding:22px}.hero,.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;box-shadow:0 8px 24px #0000000d}.hero{padding:24px;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:clamp(1.9rem,5vw,2.8rem)}.hero p{margin:0;color:var(--muted)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.badge{background:#eef1ff;padding:7px 11px;border-radius:999px;font-weight:800}.panel{padding:22px;margin-bottom:18px}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.label{font-size:.9rem;color:var(--muted);margin-bottom:5px}select,button{font:inherit}select{width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#ededed}.quizhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-weight:800}.prompt{text-align:center;padding:26px 8px 18px}.word{font-size:clamp(2rem,8vw,4.2rem);font-weight:900}.sentence{font-size:1.15rem;line-height:1.65;margin-top:12px}.tip{color:var(--muted);margin-top:8px}.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.choice{border:2px solid transparent;border-radius:14px;padding:14px;background:#f6f6f6;font-weight:800;cursor:pointer}.choice:hover{border-color:#cbd4ff}.choice.correct{background:#e6f7ed;border-color:var(--ok)}.choice.wrong{background:#fde9e9;border-color:var(--bad)}.feedback{display:none;margin-top:16px;padding:14px;border-radius:14px;background:#f7f7ff;line-height:1.6}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.stat{padding:12px;border-radius:14px;background:#fafafa;text-align:center}.stat b{display:block;font-size:1.25rem}.small{font-size:.9rem;color:var(--muted)}.cheat{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.cheat div{border:1px solid var(--line);border-radius:14px;padding:12px}.timer{font-weight:900;color:#b56a00}.target-word{font-weight:900;text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:5px;background:#fff1a8;padding:1px 4px;border-radius:5px}.hidden{display:none}@media(max-width:600px){.choices{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<h1>Word Form Master 100</h1>
+<p>คลัง 100 คำ • Noun / Verb / Adjective / Adverb / V-ing • 3 ระดับความยาก</p>
+<div class="badges"><span class="badge">100-word bank</span><span class="badge">Random quiz</span><span class="badge">Hard mode + timer</span><span class="badge">เฉลยทันที</span></div>
+</section>
+<section class="panel">
+<div class="controls">
+<div><div class="label">ระดับความยาก</div><select id="difficulty"><option value="easy">Easy — ดูคำแล้วเลือกชนิดคำ</option><option value="medium" selected>Medium — ดูคำในประโยค</option><option value="hard">Hard — บริบทซับซ้อน + จับเวลา 12 วิ</option></select></div>
+<div><div class="label">จำนวนข้อ</div><select id="count"><option value="20">20 ข้อ</option><option value="50">50 ข้อ</option><option value="100">100 ข้อ</option></select></div>
+<div><div class="label">เริ่มชุดใหม่</div><button id="newQuiz" class="btn primary" style="width:100%">New Quiz</button></div>
+</div>
+</section>
+<section class="panel">
+<div class="quizhead"><span id="progress"></span><span id="score"></span><span id="timer" class="timer hidden"></span></div>
+<div class="prompt"><div id="word" class="word"></div><div id="sentence" class="sentence"></div><div id="tip" class="tip"></div></div>
+<div id="choices" class="choices"></div><div id="feedback" class="feedback"></div>
+<div class="actions"><button id="next" class="btn primary">Next</button><button id="restart" class="btn secondary">Restart same set</button></div>
+<div class="stats"><div class="stat"><b id="right">0</b><span class="small">ถูก</span></div><div class="stat"><b id="wrong">0</b><span class="small">ผิด</span></div><div class="stat"><b id="accuracy">0%</b><span class="small">Accuracy</span></div><div class="stat"><b id="remaining">0</b><span class="small">เหลือ</span></div></div>
+</section>
+<section class="panel"><h2>Quick clues</h2><div class="cheat"><div><b>Noun</b><br>-tion, -sion, -ment, -ness, -ity, -er, -or</div><div><b>Verb</b><br>to + V1, can/will/must + V1, -ify, -ize, -en</div><div><b>Adjective</b><br>be/look/feel/seem + adj; -ful, -ive, -ous, -able, -al</div><div><b>Adverb</b><br>ขยายกริยา; มักลงท้าย -ly</div><div><b>V-ing</b><br>be + V-ing; หลัง preposition บางกรณีใช้ V-ing</div></div></section>
+</div>
+<script>
+const groups={
+"Noun":["information","communication","management","happiness","responsibility","development","decision","education","performance","agreement","improvement","difference","success","attendance","application","organization","permission","confidence","ability","solution"],
+"Verb":["inform","communicate","manage","improve","develop","decide","educate","perform","agree","apply","organize","permit","clarify","strengthen","simplify","identify","respond","complete","prepare","recommend"],
+"Adjective":["successful","careful","informative","professional","comfortable","effective","responsible","different","confident","possible","useful","helpful","dangerous","creative","active","friendly","valuable","reliable","formal","available"],
+"Adverb":["carefully","clearly","successfully","quickly","politely","effectively","professionally","confidently","properly","immediately","slowly","easily","accurately","safely","quietly","strongly","seriously","frequently","recently","normally"],
+"V-ing":["working","learning","improving","planning","writing","reading","speaking","listening","meeting","training","preparing","organizing","developing","checking","reviewing","helping","teaching","using","creating","solving"]};
+const TYPE_ORDER=["Noun","Verb","Adjective","Adverb","V-ing"];
+const templates={
+"Noun":["The manager shared useful WORD with the team.","Good WORD is important in the workplace.","The company focuses on WORD every year.","Her WORD impressed the interviewers.","We need your WORD before Friday."],
+"Verb":["Please WORD me if anything changes.","We need to WORD the process.","The team will WORD the task today.","Can you WORD the problem clearly?","They plan to WORD a new system."],
+"Adjective":["The report was very WORD.","She gave a WORD answer.","This is a very WORD tool.","Our new colleague is WORD and polite.","The service is WORD today."],
+"Adverb":["She completed the task WORD.","Please speak WORD.","The team worked WORD.","He answered the question WORD.","The system responded WORD."],
+"V-ing":["She is WORD on a report.","They are WORD for the exam.","The staff are WORD the new system.","He is WORD the document now.","We are WORD the problem together."]};
+const hardTemplates={
+"Noun":["Despite several delays, the final WORD of the project was approved by the committee.","The director emphasized the importance of clear WORD between departments."],
+"Verb":["Before the deadline, all staff must WORD the required documents carefully.","The new policy may WORD how employees report problems."],
+"Adjective":["Although the task looked difficult at first, the instructions were surprisingly WORD.","The manager considered her response both professional and WORD."],
+"Adverb":["Even under pressure, she responded WORD and avoided making unnecessary mistakes.","The team completed the urgent assignment WORD despite limited time."],
+"V-ing":["After WORD the instructions twice, he finally understood the procedure.","The staff are currently WORD several possible solutions before making a decision."]};
+const notes={"Noun":"คำนาม: คน สิ่งของ แนวคิด เหตุการณ์ หรือคุณสมบัติ","Verb":"คำกริยา: การกระทำหรือสภาพ","Adjective":"คำคุณศัพท์: ขยายคำนาม หรืออยู่หลัง be/look/feel/seem","Adverb":"คำวิเศษณ์: ขยายกริยา adjective หรือ adverb","V-ing":"รูปกริยา + ing: ใช้ใน continuous tense หรือทำหน้าที่คล้ายคำนามในบางโครงสร้าง"};
+let bank=[];TYPE_ORDER.forEach(t=>groups[t].forEach((w,i)=>bank.push({w,t,s:templates[t][i%templates[t].length].replace("WORD",w),hs:hardTemplates[t][i%hardTemplates[t].length].replace("WORD",w)})));
+let quiz=[],idx=0,score=0,wrong=0,locked=false,seconds=12,timerId=null;
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startTimer(){clearInterval(timerId);const d=document.getElementById('difficulty').value,t=document.getElementById('timer');if(d!=="hard"){t.classList.add('hidden');return}seconds=12;t.classList.remove('hidden');t.textContent=`เวลา ${seconds}s`;timerId=setInterval(()=>{seconds--;t.textContent=`เวลา ${seconds}s`;if(seconds<=0){clearInterval(timerId);timeUp()}},1000)}
+function timeUp(){if(locked)return;locked=true;wrong++;reveal(null);updateStats()}
+function newQuiz(){const n=+document.getElementById('count').value;quiz=shuffle(bank).slice(0,n);idx=0;score=0;wrong=0;render()}
+function render(){clearInterval(timerId);locked=false;const item=quiz[idx],d=document.getElementById('difficulty').value;document.getElementById('progress').textContent=`ข้อ ${idx+1} / ${quiz.length}`;document.getElementById('score').textContent=`คะแนน ${score}`;document.getElementById('feedback').style.display='none';document.getElementById('feedback').innerHTML='';document.getElementById('choices').innerHTML='';if(d==='easy'){document.getElementById('word').textContent=item.w;document.getElementById('sentence').textContent='';document.getElementById('tip').textContent='คำนี้เป็นชนิดคำอะไร?'}else if(d==='medium'){document.getElementById('word').textContent=item.w;document.getElementById('sentence').textContent=item.s;document.getElementById('tip').textContent='ใช้ทั้งรูปคำและตำแหน่งในประโยค'}else{document.getElementById('word').textContent='';document.getElementById('sentence').innerHTML=item.hs.replace(item.w,`<span class="target-word">${item.w}</span>`);document.getElementById('tip').textContent='Hard mode: คำที่ขีดเส้นใต้คือคำที่ต้องวิเคราะห์ แล้วเลือกชนิดคำภายใน 12 วินาที'}TYPE_ORDER.forEach(t=>{const b=document.createElement('button');b.className='choice';b.textContent=t;b.dataset.value=t;b.onclick=()=>choose(b,item.t);document.getElementById('choices').appendChild(b)});updateStats();startTimer()}
+function choose(btn,answer){if(locked)return;locked=true;clearInterval(timerId);if(btn.dataset.value===answer)score++;else wrong++;reveal(btn);updateStats()}
+function reveal(btn){const item=quiz[idx];document.querySelectorAll('.choice').forEach(b=>{b.disabled=true;if(b.dataset.value===item.t)b.classList.add('correct')});if(btn&&btn.dataset.value!==item.t)btn.classList.add('wrong');const fb=document.getElementById('feedback');fb.style.display='block';fb.innerHTML=`<b>${btn?(btn.dataset.value===item.t?'ถูกต้อง ✅':'ยังไม่ถูก ❌'):'หมดเวลา ⏰'}</b><br><b>${item.w}</b> = ${item.t}<br>${notes[item.t]}<br><span class="small">Example: ${item.s}</span>`}
+function updateStats(){document.getElementById('score').textContent=`คะแนน ${score}`;document.getElementById('right').textContent=score;document.getElementById('wrong').textContent=wrong;const done=score+wrong;document.getElementById('accuracy').textContent=(done?Math.round(score/done*100):0)+'%';document.getElementById('remaining').textContent=Math.max(quiz.length-idx-1,0)}
+document.getElementById('next').onclick=()=>{if(!locked)return;if(idx<quiz.length-1){idx++;render()}else{clearInterval(timerId);document.getElementById('word').textContent='Finished!';document.getElementById('sentence').textContent=`คะแนน ${score} / ${quiz.length}`;document.getElementById('tip').textContent=score/quiz.length>=.85?'ยอดเยี่ยม — ลอง Hard 100 ข้อได้เลย':'ลองใหม่และสังเกตทั้ง suffix + ตำแหน่งในประโยค';document.getElementById('choices').innerHTML='';document.getElementById('timer').classList.add('hidden')}};
+document.getElementById('restart').onclick=()=>{idx=0;score=0;wrong=0;render()};document.getElementById('newQuiz').onclick=newQuiz;document.getElementById('difficulty').onchange=()=>{idx=0;score=0;wrong=0;render()};newQuiz();
+</script>
+</body></html>
